@@ -20,19 +20,31 @@ class ArticlesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'string|max:255',
-            'img' => 'string|max:255',
+            'text' => 'string',
+            'img' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         if ($validator->fails()) {
             return new JsonResponse($validator->errors(), '400');
         }
 
+        $image = $request->file('img');
+        $name = '';
+
+        if ($image) {
+            $name = time() . '.' . $image->getClientOriginalExtension();
+            $destinationPath = public_path('/images/uploads/');
+            $image->move($destinationPath, $name);
+        }
+
         $item = Article::create([
-            'title' => $request->title,
-            'text' => $request->text,
-            'img' => $request->img,
-            'is_published' => $request->is_published
+            'title' => $request->input('title'),
+            'text' => $request->input('text'),
+            'img' => ($image) ? 'images/uploads/' . $name : '',
+            'is_published' => $request->input('is_published')
         ]);
+
+        $item->tags()->attach($request->input('tags'));
 
         return new ArticleResource($item);
     }
@@ -42,25 +54,44 @@ class ArticlesController extends Controller
         return new ArticleResource($item);
     }
 
-    public function update(Request $request, Article $item)
+    public function update(Request $request, int $id)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'string|max:255',
-            'img' => 'string|max:255',
+            'img' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg,string|max:2048',
+            'text' => 'string',
         ]);
 
         if ($validator->fails()) {
             return new JsonResponse($validator->errors(), '400');
         }
 
-        $item->update($request->only(['title', 'is_published', 'text', 'img']));
+        $image = $request->file('img');
+        $name = '';
+        if ($image) {
+            $name = time() . '.' . $image->getClientOriginalExtension();
+            $destinationPath = public_path('/images/uploads/');
+            $image->move($destinationPath, $name);
+        }
+
+        $item = Article::where('id', $id)->first();
+        $item->tags()->detach();
+
+        $item->title = $request->input('title');
+        $item->text = $request->input('text');
+        $item->img = ($image) ? 'images/uploads/' . $name : '';
+        $item->is_published = $request->input('is_published');
+
+        $item->tags()->attach($request->input('tags'));
+
+        $item->save();
 
         return new ArticleResource($item);
     }
 
-    public function destroy(Article $item)
+    public function destroy(int $id)
     {
-        $item->delete();
+        Article::destroy(['id' => $id]);
 
         return response()->json(null, 204);
     }

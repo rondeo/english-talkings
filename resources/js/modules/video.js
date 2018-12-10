@@ -1,24 +1,24 @@
 import Vue from 'vue'
 
 const state = {
-    video: []
+    videos: []
 };
 
 
 const actions = {
-    getVideo({commit}){
-        commit('getVideo');
+    getVideos({commit}){
+        commit('getVideos');
     }
 };
 
 const mutations = {
     addVideo(state, { video }) {
-        state.video.push(video);
+        state.videos.push(video);
     },
 
-    getVideo() {
-        Vue.prototype.$axios.get('video')
-            .then( response => state.video = response.data.data);
+    getVideos() {
+       axios.get('api/videos')
+            .then( response => state.videos = response.data.data);
     }
 };
 

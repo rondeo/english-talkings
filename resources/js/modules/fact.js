@@ -12,8 +12,8 @@ const actions = {
 };
 
 const mutations = {
-    addFacts(state, { fact }) {
-        state.fact.push(fact);
+    addFact(state, { fact }) {
+        state.facts.push(fact);
     },
 
     getFacts() {

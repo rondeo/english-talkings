@@ -12,7 +12,7 @@ import VueTables from 'vue-tables-2';
 import vSelect from 'vue-select';
 
 
-Vue.component('v-select', vSelect)
+Vue.component('v-select', vSelect);
 Vue.use(VueTables.ClientTable);
 
 

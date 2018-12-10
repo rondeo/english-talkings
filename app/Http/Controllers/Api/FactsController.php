@@ -27,8 +27,8 @@ class FactsController extends Controller
         }
 
         $item = Fact::create([
-            'title' => $request->name,
-            'is_published' => $request->is_published
+            'title' => $request->input('title'),
+            'is_published' => $request->input('is_published')
         ]);
 
         return new FactResource($item);
@@ -39,7 +39,7 @@ class FactsController extends Controller
         return new FactResource($item);
     }
 
-    public function update(Request $request, Fact $item)
+    public function update(Request $request, int $id)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'string|max:255'
@@ -49,14 +49,17 @@ class FactsController extends Controller
             return new JsonResponse($validator->errors(), '400');
         }
 
-        $item->update($request->only(['title', 'is_published']));
+        $item = Fact::where('id', $id)->first();
+        $item->title = $request->input('title');
+        $item->is_published = $request->input('is_published');
+        $item->save();
 
         return new FactResource($item);
     }
 
-    public function destroy(Fact $item)
+    public function destroy(int $id)
     {
-        $item->delete();
+        Fact::destroy(['id' => $id]);
 
         return response()->json(null, 204);
     }

@@ -14,10 +14,10 @@
                     <v-card-text>
                         <v-container grid-list-md>
                             <v-layout wrap>
-                                <v-flex xs12 sm6 md4>
+                                <v-flex md12>
                                     <v-text-field v-model="editedItem.title" label="Title"></v-text-field>
                                 </v-flex>
-                                <v-flex xs12 sm6 md4>
+                                <v-flex md12>
                                     <v-checkbox
                                             v-model="editedItem.is_published"
                                             label="is_published"
@@ -45,7 +45,7 @@
         >
             <template slot="items" slot-scope="props">
                 <td>{{ props.item.title }}</td>
-                <td>{{ props.item.is_published }}</td>
+                <td>{{ (props.item.is_published === 1 || props.item.is_published === 'Да') ? 'Да' : 'Нет' }}</td>
                 <td class="justify-center layout px-0">
                     <v-icon
                             small
@@ -82,8 +82,8 @@
                     align: 'left',
                     value: 'title'
                 },
-                { text: 'is_published', value: 'is_published', align: 'left' },
-                { text: 'Actions', value: 'name', sortable: false }
+                { text: 'Published', value: 'is_published', align: 'left' },
+                { text: 'Actions', value: 'actions', sortable: false }
             ],
             editedIndex: -1,
             editedItem: {
@@ -97,7 +97,7 @@
         }),
         computed: {
             formTitle () {
-                return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+                return this.editedIndex === -1 ? 'New Fact' : 'Edit Fact'
             },
             ...mapState({
                 facts: state => state.fact.facts
@@ -112,37 +112,70 @@
 
         created () {
             this.$store.dispatch('fact/getFacts');
-            this.initialize()
         },
 
         methods: {
-            initialize () {
-            },
-
             editItem (item) {
-                this.editedIndex = this.facts.indexOf(item)
-                this.editedItem = Object.assign({}, item)
+                this.editedIndex = this.facts.indexOf(item);
+                this.editedItem = Object.assign({}, item);
                 this.dialog = true
             },
 
             deleteItem (item) {
-                const index = this.facts.indexOf(item)
-                confirm('Are you sure you want to delete this item?') && this.facts.splice(index, 1)
+                const index = this.facts.indexOf(item);
+                confirm('Are you sure you want to delete this item?') &&
+                axios.post('api/facts/' + item.id, {_method: 'DELETE'}).then(() => {
+                    this.facts.splice(index, 1);
+                });
             },
 
             close () {
-                this.dialog = false
+                this.dialog = false;
                 setTimeout(() => {
-                    this.editedItem = Object.assign({}, this.defaultItem)
+                    this.editedItem = Object.assign({}, this.defaultItem);
                     this.editedIndex = -1
                 }, 300)
             },
 
             save () {
                 if (this.editedIndex > -1) {
-                    Object.assign(this.facts[this.editedIndex], this.editedItem)
+                    let edited = this.editedIndex;
+                    //this.editedIndex = this.facts.indexOf(this.editedItem);
+
+                    let data = {
+                        title: this.editedItem.title,
+                        is_published: this.editedItem.is_published,
+                        _method: 'PUT',
+                    };
+
+                    axios.post('api/facts/' + this.editedItem.id, data).then((response) => {
+                        let newItem = response.data.data;
+
+                        if (newItem.is_published === true) {
+                            newItem.is_published = 'Да';
+                        } else {
+                            newItem.is_published = 'Нет';
+                        }
+
+                        Object.assign(this.facts[edited], newItem);
+                    });
+
                 } else {
-                    this.facts.push(this.editedItem)
+                    let data = {
+                        title: this.editedItem.title,
+                        is_published: this.editedItem.is_published,
+                    };
+                    axios.post('api/facts', data).then((response) => {
+                        let newItem = response.data.data;
+
+                        if (newItem.is_published === true) {
+                            newItem.is_published = 'Да';
+                        } else {
+                            newItem.is_published = 'Нет';
+                        }
+
+                        this.facts.push(newItem);
+                    });
                 }
                 this.close()
             }

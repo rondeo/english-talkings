@@ -28,9 +28,9 @@ class VideoController extends Controller
         }
 
         $item = Video::create([
-            'title' => $request->name,
-            'is_published' => $request->is_published,
-            'url' => $request->url,
+            'title' => $request->input('title'),
+            'url' => $request->input('url'),
+            'is_published' => $request->input('is_published')
         ]);
 
         return new VideoResource($item);
@@ -41,7 +41,7 @@ class VideoController extends Controller
         return new VideoResource($item);
     }
 
-    public function update(Request $request, Video $item)
+    public function update(Request $request, int $id)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'string|max:255',
@@ -52,14 +52,18 @@ class VideoController extends Controller
             return new JsonResponse($validator->errors(), '400');
         }
 
-        $item->update($request->only(['title', 'url', 'is_published']));
+        $item = Video::where('id', $id)->first();
+        $item->title = $request->input('title');
+        $item->url = $request->input('url');
+        $item->is_published = $request->input('is_published');
+        $item->save();
 
         return new VideoResource($item);
     }
 
-    public function destroy(Video $item)
+    public function destroy(int $id)
     {
-        $item->delete();
+        Video::destroy(['id' => $id]);
 
         return response()->json(null, 204);
     }

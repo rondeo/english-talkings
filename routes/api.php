@@ -19,6 +19,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('facts', 'Api\FactsController');
+    Route::apiResource('facts', 'Api\FactsController');
 
 });
 Route::apiResource('facts', 'Api\FactsController');
+Route::apiResource('articles', 'Api\ArticlesController');
+Route::apiResource('videos', 'Api\VideoController');
