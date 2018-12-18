@@ -74328,7 +74328,7 @@ var render = function() {
     { staticClass: "mt-3" },
     [
       _c("div", { staticClass: "card mb-3" }, [
-        _c("h5", { staticClass: "card-header" }, [_vm._v("Fact of the day")]),
+        _c("h2", { staticClass: "card-header" }, [_vm._v("Fact of the day")]),
         _vm._v(" "),
         _c("div", { staticClass: "card-body" }, [
           _c("h5", { staticClass: "card-title" }, [
@@ -74338,17 +74338,13 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "card mb-3" }, [
-        _c("h5", { staticClass: "card-header" }, [_vm._v("Useful Videos")]),
+        _c("h2", { staticClass: "card-header" }, [_vm._v("Useful Videos")]),
         _vm._v(" "),
         _c(
           "div",
           { staticClass: "card-body row" },
           _vm._l(this.videos, function(video) {
             return _c("div", { staticClass: "video-item col-sm-4" }, [
-              _c("h5", { staticClass: "card-title" }, [
-                _vm._v(_vm._s(video.title))
-              ]),
-              _vm._v(" "),
               _c("iframe", {
                 attrs: {
                   width: "300",
@@ -74359,13 +74355,17 @@ var render = function() {
                     "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture",
                   allowfullscreen: ""
                 }
-              })
+              }),
+              _vm._v(" "),
+              _c("h5", { staticClass: "card-title" }, [
+                _vm._v(_vm._s(video.title))
+              ])
             ])
           })
         )
       ]),
       _vm._v(" "),
-      _c("h1", { staticClass: "heading mb-3" }, [_vm._v("Start search")]),
+      _c("h2", { staticClass: "heading mb-3" }, [_vm._v("Start search")]),
       _vm._v(" "),
       _c(
         "div",

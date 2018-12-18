@@ -1,17 +1,16 @@
 <template>
     <div class="mt-3">
         <div class="card mb-3">
-            <h5 class="card-header">Fact of the day</h5>
+            <h2 class="card-header">Fact of the day</h2>
             <div class="card-body">
                 <h5 class="card-title">{{this.fact.title}}</h5>
             </div>
         </div>
 
         <div class="card mb-3">
-            <h5 class="card-header">Useful Videos</h5>
+            <h2 class="card-header">Useful Videos</h2>
             <div class="card-body row">
                 <div class="video-item col-sm-4" v-for="video in this.videos">
-                    <h5 class="card-title">{{video.title}}</h5>
                     <iframe width="300"
                             height="220"
                             :src="'https://www.youtube.com/embed/' + video.url"
@@ -19,11 +18,12 @@
                             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen>
                     </iframe>
+                    <h5 class="card-title">{{video.title}}</h5>
                 </div>
             </div>
         </div>
 
-        <h1 class="heading mb-3">Start search</h1>
+        <h2 class="heading mb-3">Start search</h2>
         <div class="col-sm-4 offset-sm-4 form-group text-center">
             <button class="btn btn-lg btn-danger btn-block" @click="addNewcomer">Go</button>
         </div>
