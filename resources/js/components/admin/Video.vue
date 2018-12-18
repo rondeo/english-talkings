@@ -141,6 +141,7 @@
             },
 
             save () {
+                this.editedItem.url = this.getYoutubeId(this.editedItem.url);
                 if (this.editedIndex > -1) {
                     let edited = this.editedIndex;
 
@@ -182,6 +183,16 @@
                     });
                 }
                 this.close()
+            },
+            getYoutubeId(url) {
+                const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                let match = url.match(regExp);
+                if (match && match[2].length == 11) {
+                    console.log(match[2]);
+                    return match[2];
+                } else {
+                    console.log('error while parsing');
+                }
             }
         }
     }

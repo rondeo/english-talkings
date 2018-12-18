@@ -99,6 +99,7 @@ class ParseCountries extends Command
                 $country = new Country();
                 $country->name = $item['name'];
                 $country->flag = 'svg/flags/' . $filename;
+                $country->geojson = json_encode('{}');
                 $country->language_id = $language->id;
                 $country->save();
 

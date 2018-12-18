@@ -49,7 +49,12 @@ class CountriesController extends Controller
         }
         $redData = substr($str,0,-1);
         $redData = substr($redData,0,-1);
-        $redData .= ']';
+
+        if ($redData) {
+            $redData .= ']';
+        } else {
+            $redData = '{}';
+        }
 
         $str = '[';
         foreach ($geojson as $key => $item) {
@@ -59,7 +64,13 @@ class CountriesController extends Controller
         }
         $yellowData = substr($str,0,-1);
         $yellowData = substr($yellowData,0,-1);
-        $yellowData .= ']';
+
+        if ($yellowData) {
+            $yellowData .= ']';
+        } else {
+            $yellowData = '{}';
+        }
+
 
         $str = '[';
         foreach ($geojson as $key => $item) {
@@ -69,8 +80,12 @@ class CountriesController extends Controller
         }
         $greenData = substr($str,0,-1);
         $greenData = substr($greenData,0,-1);
-        $greenData .= ']';
 
+        if ($greenData) {
+            $greenData .= ']';
+        } else {
+            $greenData = '{}';
+        }
 
         return view('welcome', compact('greenData', 'yellowData', 'redData'));
     }

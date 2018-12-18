@@ -1,5 +1,30 @@
 <template>
-    <div>
+    <div class="mt-3">
+        <div class="card mb-3">
+            <h5 class="card-header">Fact of the day</h5>
+            <div class="card-body">
+                <h5 class="card-title">{{this.fact.title}}</h5>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <h5 class="card-header">Useful Videos</h5>
+            <div class="card-body row">
+                <div class="video-item col-sm-4" v-for="video in this.videos">
+                    <h5 class="card-title">{{video.title}}</h5>
+                    <iframe width="300"
+                            height="220"
+                            src="https://www.youtube.com/embed/ + video.url"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+
+
+        <h1 class="heading mb-3">Start search</h1>
         <div class="col-sm-4 offset-sm-4 form-group text-center">
             <button class="btn btn-lg btn-danger btn-block" @click="addNewcomer">Go</button>
         </div>
@@ -107,6 +132,8 @@
                 countries: [],
                 languages: [],
                 languageLevels: [],
+                fact: null,
+                videos: [],
                 showTable: false
             }
         },
@@ -114,7 +141,9 @@
             Promise.all([
                 this.getCountries(),
                 this.getLanguages(),
-                this.getLanguageLevels()
+                this.getLanguageLevels(),
+                this.getFact(),
+                this.getVideos(),
             ]).then(() => {
                 window.Echo.join('online-users').here((users) => {
                     this.tableData = users.filter((user) =>
@@ -181,6 +210,18 @@
                     .then(response => {
                         this.languageLevels = response.data
                     })
+            },
+            getFact() {
+                axios.get('/fact')
+                    .then(response => {
+                        this.fact = response.data
+                    })
+            },
+            getVideos() {
+                axios.get('/get-last-videos')
+                    .then(response => {
+                        this.videos = response.data
+                    })
             }
         },
         filters: {
@@ -192,3 +233,5 @@
         },
     }
 </script>
+<style>
+</style>

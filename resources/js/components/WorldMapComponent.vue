@@ -70,7 +70,7 @@
                         "fill-opacity": 0.5
                     },
                     "type":"FeatureCollection",
-                    "features": JSON.parse(this.greenData),
+                    "features": this.greenData !== '' ? JSON.parse(this.greenData) : {},
                 },
                 geojsonRed: {
                     "type": "FeatureCollection",
@@ -82,7 +82,7 @@
                         weight: 1,
                         "fill-opacity": 0.5
                     },
-                    "features": JSON.parse(this.redData),
+                    "features": this.redData !== '' ? JSON.parse(this.redData) : {},
                 },
                 geojsonYellow: {
                     "type": "FeatureCollection",
@@ -94,11 +94,12 @@
                         weight: 1,
                         "fill-opacity": 0.5
                     },
-                    "features": JSON.parse(this.yellowData),
+                    "features": this.yellowData !== '' ? JSON.parse(this.yellowData) : {},
                 }
             }
         },
         mounted() {
+            console.log(this.greenData);
         }
     }
 </script>

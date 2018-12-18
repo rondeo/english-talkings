@@ -26,6 +26,8 @@ Route::get('/countries', 'CountriesController@index');
 Route::get('/geojson', 'CountriesController@geojson');
 Route::get('/languages', 'LanguagesController@index');
 Route::get('/fact', 'FactsController@index');
+Route::get('/videos', 'VideosController@index');
+Route::get('/get-last-videos', 'VideosController@getLastVideos');
 Route::get('/language-levels', 'LanguageLevelsController@index');
 Route::delete('/delete-user/{userId}', 'NewcomersController@delete');
 
