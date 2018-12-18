@@ -14,7 +14,7 @@
                     <h5 class="card-title">{{video.title}}</h5>
                     <iframe width="300"
                             height="220"
-                            src="https://www.youtube.com/embed/ + video.url"
+                            :src="'https://www.youtube.com/embed/' + video.url"
                             frameborder="0"
                             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen>
@@ -22,7 +22,6 @@
                 </div>
             </div>
         </div>
-
 
         <h1 class="heading mb-3">Start search</h1>
         <div class="col-sm-4 offset-sm-4 form-group text-center">
@@ -132,7 +131,7 @@
                 countries: [],
                 languages: [],
                 languageLevels: [],
-                fact: null,
+                fact: {},
                 videos: [],
                 showTable: false
             }
@@ -145,27 +144,30 @@
                 this.getFact(),
                 this.getVideos(),
             ]).then(() => {
-                window.Echo.join('online-users').here((users) => {
-                    this.tableData = users.filter((user) =>
-                        user.country_id = this.countries[user.country_id].flag
-                    );
-                    this.tableData = this.tableData.filter((user) =>
-                        user.language_id = this.languages[user.language_id].name
-                    );
-                    this.tableData = this.tableData.filter((user) =>
-                        user.language_level_id = this.languageLevels[user.language_level_id].name
-                    );
-                })
-                    .joining((user) => {
-                        user.country_id = this.countries[user.country_id].flag
-                        user.language_id = this.languages[user.language_id].name
-                        user.language_level_id = this.languageLevels[user.language_level_id].name
-
-                        this.tableData.push(user)
+                if (window.Echo !== undefined) {
+                    window.Echo.join('online-users').here((users) => {
+                        this.tableData = users.filter((user) =>
+                            user.country_id = this.countries[user.country_id].flag
+                        );
+                        this.tableData = this.tableData.filter((user) =>
+                            user.language_id = this.languages[user.language_id].name
+                        );
+                        this.tableData = this.tableData.filter((user) =>
+                            user.language_level_id = this.languageLevels[user.language_level_id].name
+                        );
                     })
-                    .leaving((user) => (this.tableData.splice(this.tableData.indexOf(user.id), 1)))
-                    .listen('online-users');
-                this.showTable = true;
+                        .joining((user) => {
+                            user.country_id = this.countries[user.country_id].flag
+                            user.language_id = this.languages[user.language_id].name
+                            user.language_level_id = this.languageLevels[user.language_level_id].name
+
+                            this.tableData.push(user)
+                        })
+                        .leaving((user) => (this.tableData.splice(this.tableData.indexOf(user.id), 1)))
+                        .listen('online-users');
+
+                    this.showTable = true;
+                }
             });
 
         },
